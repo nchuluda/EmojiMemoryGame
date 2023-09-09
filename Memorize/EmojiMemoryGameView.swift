@@ -10,34 +10,61 @@ import SwiftUI
 struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
     
-    let birds = ["🪿", "🪿", "🦆", "🦆", "🐥", "🐥", "🦉", "🦉", "🦜", "🦜"]
-    let foods = ["🍓", "🍓", "🍋", "🍋", "🍉", "🍉", "🍏", "🍏", "🍑", "🍑", "🍒", "🍒"]
-    let sports = ["⚽️", "⚽️", "🏀", "🏀", "🏈", "🏈", "⚾️", "⚾️", "🎾", "🎾", "🥏", "🥏", "🎱", "🎱"]
-    
-    
-    
-    @State var emojiPack: [String] = ["🪿", "🪿", "🦆", "🦆", "🐥", "🐥", "🦉", "🦉", "🦜", "🦜"]
-    @State var cardCount: Int = 10
-    @State var themeColor: Color = .blue
+//    let birds = ["🪿", "🦆", "🐥", "🦉", "🦜"]
+//    let foods = ["🍓", "🍋", "🍉", "🍏", "🍑", "🍒"]
+//    let sports = ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🥏", "🎱"]
+//
+//    @State var emojiPack: [String] = ["🪿", "🪿", "🦆", "🦆", "🐥", "🐥", "🦉", "🦉", "🦜", "🦜"]
+//    @State var cardCount: Int = 10
+    @State var themeEmojis: Array<String> = birds
+    @State var themeColor: Color = .cyan
+    @State var themeName: String = "Birds"
     
     var body: some View {
         VStack {
-            Text("Memorize!").font(.largeTitle)
+            Text(themeName).font(.largeTitle)
             ScrollView {
                 cards
                     .animation(.default, value: viewModel.cards)
             }
-            Spacer()
+//            HStack {
+//                Button("Shuffle") {
+//                    viewModel.shuffle()
+//                }
+//                Spacer()
+//                Button("New Game") {
+//                    viewModel.newGame()
+//                    style(name: "Bird Match", color: .cyan, emojis: birds)
+//                }
+//            }
+//          Spacer()
             themeSelector
-            Button("Shuffle") {
-                viewModel.shuffle()
-            }
+//            HStack {
+//                Button("Birds") {
+//                    viewModel.theme(theme: birds)
+//                }
+//                Button("Foods") {
+//                    viewModel.theme(theme: foods)
+//                }
+//                Button("Hands") {
+//                    viewModel.theme(theme: hands)
+//                }
+//                Button("Hearts") {
+//                    viewModel.theme(theme: hearts)
+//                }
+//                Button("Ocean") {
+//                    viewModel.theme(theme: ocean)
+//                }
+//                Button("Sports") {
+//                    viewModel.theme(theme: sports)
+//                }
+//            }
         }
         .padding()
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 0)], spacing: 0) {
             ForEach(viewModel.cards) { card in
                 CardView(card)
                     .aspectRatio(2/3, contentMode: .fit)
@@ -51,22 +78,32 @@ struct EmojiMemoryGameView: View {
     }
     
     var themeSelector: some View {
-        HStack(alignment: .lastTextBaseline) {
-            theme(theme: birds.shuffled(), icon: "bird", name: "Birds", tCardCount: birds.count, color: .blue)
-            theme(theme: foods.shuffled(), icon: "carrot", name: "Foods", tCardCount: foods.count, color: .green)
-            theme(theme: sports.shuffled(), icon: "figure.basketball", name: "Sports", tCardCount: sports.count, color: .red)
+        VStack {
+            HStack(alignment: .firstTextBaseline) {
+                style(name: themeName, label: "New Game", color: themeColor, emojis: themeEmojis)
+            }
+            Spacer().frame(height: 30)
+            HStack(alignment: .lastTextBaseline) {
+                style(name: "Birds", label: "Birds", color: .cyan, emojis: birds)
+                style(name: "Ocean", label: "Ocean", color: .blue, emojis: ocean)
+                style(name: "Foods", label: "Foods", color: .green, emojis: foods)
+                style(name: "Hearts", label: "Hearts", color: .yellow, emojis: hearts)
+                style(name: "Hands", label: "Hands", color: .orange, emojis: hands)
+                style(name: "Sports", label: "Sports", color: .red, emojis: sports)
+            }
         }
     }
     
-    func theme(theme: [String], icon: String, name: String, tCardCount: Int, color: Color) -> some View {
+    func style(name: String, label: String, color: Color, emojis: Array<String>) -> some View {
         VStack {
-            Image(systemName: icon).font(.title2)
+//            Image(systemName: icon).font(.title2)
             Button(action: {
-                emojiPack = theme
-                cardCount = tCardCount
                 themeColor = color
+                themeName = name
+                themeEmojis = emojis
+                viewModel.theme(theme: emojis)
             }, label: {
-                Text(name).font(.body)
+                Text(label).font(.body)
             })
         }
     }
