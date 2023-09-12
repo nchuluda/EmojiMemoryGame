@@ -1,37 +1,35 @@
 //
 //  EmojiMemoryGame.swift
-//  Memorize
+//  Memorize - VIEWMODEL
 //
 //  Created by Nathan on 8/31/23.
 //
 
+
 import SwiftUI
 
-let birds = ["🪿", "🦆", "🐥", "🦉", "🦜", "🦅", "🦇", "🐔", "🐦"]
-let foods = ["🍓", "🍋", "🍉", "🍏", "🍑", "🍒", "🥑", "🫒", "🥦"]
-let sports = ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🥏", "🎱", "🏉"]
-let hearts = ["🩷", "❤️", "🧡", "💛", "💚", "🩵", "💙", "💜"]
-let hands = ["🤞", "👍", "🫰", "✋", "🖖", "👊", "👆", "🤟", "🤙"]
-let ocean = ["🐙", "🦐", "🪼", "🦞", "🦀", "🐡", "🐠", "🐟", "🐳", "🦈"]
-
 class EmojiMemoryGame: ObservableObject {
-    private static func createMemoryGame(emojis: Array<String>, count: Int) -> MemoryGame<String> {
-        let shuffled = emojis.shuffled()
-        return MemoryGame(numberOfPairsOfCards: count) { pairIndex in
-            if shuffled.indices.contains(pairIndex) {
-                return shuffled[pairIndex]
+    @Published private var model: MemoryGame<String>
+    
+    var theme = themes.randomElement()!
+    
+    private static func createMemoryGame(theme: Theme) -> MemoryGame<String> {
+        let shuffledEmojis = theme.emojis.shuffled()
+        return MemoryGame(numberOfPairsOfCards: theme.numberPairsCards) { pairIndex in
+            if shuffledEmojis.indices.contains(pairIndex) {
+                return shuffledEmojis[pairIndex]
             } else {
                 return "⁉️"
             }
         }
     }
     
-    @Published private var model = createMemoryGame(emojis: ocean, count: 8)
-    
-    
-    var cards: Array<MemoryGame<String>.Card> {
-        return model.cards
+    init() {
+        model = EmojiMemoryGame.createMemoryGame(theme: theme)
     }
+    
+    var cards: Array<MemoryGame<String>.Card> { model.cards }
+    var score: Int { model.score }
     
     // MARK: - Intents
     
@@ -43,34 +41,34 @@ class EmojiMemoryGame: ObservableObject {
         model.choose(card)
     }
     
-//    func newGame() {
-//        model = EmojiMemoryGame.createMemoryGame(emojis: birds)
-//        model.shuffle()
-//    }
+    func newGame() {
+        theme = themes.randomElement()!
+        model = EmojiMemoryGame.createMemoryGame(theme: theme)
+    }
     
-    func theme(theme: Array<String>) {
-        switch theme {
-        case birds:
-            model = EmojiMemoryGame.createMemoryGame(emojis: birds, count: 8)
-            model.shuffle()
-        case foods:
-            model = EmojiMemoryGame.createMemoryGame(emojis: foods, count: 8)
-            model.shuffle()
-        case sports:
-            model = EmojiMemoryGame.createMemoryGame(emojis: sports, count: 6)
-            model.shuffle()
-        case hearts:
-            model = EmojiMemoryGame.createMemoryGame(emojis: hearts, count: 8)
-            model.shuffle()
-        case hands:
-            model = EmojiMemoryGame.createMemoryGame(emojis: hands, count: 8)
-            model.shuffle()
-        case ocean:
-            model = EmojiMemoryGame.createMemoryGame(emojis: ocean, count: 8)
-            model.shuffle()
-        default:
-            model = EmojiMemoryGame.createMemoryGame(emojis: birds, count: 8)
-            model.shuffle()
+    func selectTheme(themeName: String) {
+        switch themeName {
+            case "Birds":
+                theme =  themes[0]
+                model = EmojiMemoryGame.createMemoryGame(theme: themes[0])
+            case "Ocean":
+                theme =  themes[1]
+                model = EmojiMemoryGame.createMemoryGame(theme: themes[1])
+            case "Foods":
+                theme =  themes[2]
+                model = EmojiMemoryGame.createMemoryGame(theme: themes[2])
+            case "Hearts":
+                theme =  themes[3]
+                model = EmojiMemoryGame.createMemoryGame(theme: themes[3])
+            case "Hands":
+                theme =  themes[4]
+                model = EmojiMemoryGame.createMemoryGame(theme: themes[4])
+            case "Sports":
+                theme =  themes[5]
+                model = EmojiMemoryGame.createMemoryGame(theme: themes[5])
+            default:
+                theme =  themes[0]
+                model = EmojiMemoryGame.createMemoryGame(theme: themes[0])
         }
     }
 }
