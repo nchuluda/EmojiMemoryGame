@@ -4,13 +4,15 @@
 //
 //  Created by Nathan on 8/31/23.
 //
-
+import SwiftUI
 import Foundation
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
     private(set) var score = 0
-     
+    private(set) var cardsRemaining: Int
+    private(set) var gameOver = false
+    
     init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
         cards = []
         for pairIndex in 0..<max(2, numberOfPairsOfCards) {
@@ -19,6 +21,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
             cards.append(Card(content: content, id: "\(pairIndex+1)b"))
         }
         cards.shuffle()
+        cardsRemaining = cards.count
     }
     
     var indexOfSingleFaceUpCard: Int? {
@@ -27,6 +30,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     mutating func choose(_ card: Card) {
+        
         if let chosenIndex = cards.firstIndex(where: { $0.id == card.id }) {
             
             // Only increment timesFlipped if card clicked is face down
@@ -50,6 +54,15 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                         score += 2
                         print("Match! +2 points")
                         print("Score: \(score)")
+                        
+                        cardsRemaining -= 2
+                        print("Number of cards remaining: \(cardsRemaining)")
+                        if cardsRemaining == 0 {
+//                            cards[chosenIndex].isFaceUp = true
+                            gameOver = true
+                            print("You've won! Score: \(score)")
+                        }
+                        
                         
                     // One card has already been seen, lose one point for penalty
                     } else if cards[chosenIndex].timesFlipped > 1 && cards[potentialMatchIndex].timesFlipped <= 1 {

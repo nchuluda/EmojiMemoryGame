@@ -11,24 +11,39 @@ struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
     
     var body: some View {
-        VStack {
-            HStack {
-                Text(viewModel.theme.name).font(.largeTitle)
-                Spacer()
-                Text("Score: \(viewModel.score)").font(.largeTitle)
-            }
-
-            ScrollView { cards.animation(.default, value: viewModel.cards) }
-            Spacer()
-            Button("New Game") { viewModel.newGame() }
-            // Buttons to select new theme
-            HStack {
-                ForEach(themes) { theme in
-                    Button(theme.name) { viewModel.selectTheme(themeName: theme.name) }
+        if !viewModel.gameOver {
+            VStack {
+                HStack {
+                    Text(viewModel.theme.name).font(.largeTitle)
+                    Spacer()
+                    Text("Score: \(viewModel.score)").font(.largeTitle)
                 }
-            }
+                
+                ScrollView { cards.animation(.default, value: viewModel.cards) }
+                Spacer()
+                Button("New Game") { viewModel.newGame() }
+                // Buttons to select new theme
+                HStack {
+                    ForEach(themes) { theme in
+                        Button(theme.name) { viewModel.selectTheme(themeName: theme.name) }
+                    }
+                }
+            } .padding()
+            
+            // GAME OVER VIEW
+        } else {
+            VStack {
+                Spacer()
+                Text("You win! Score: \(viewModel.score)").font(.largeTitle)
+                Spacer()
+                Button("New Game") { viewModel.newGame() }
+                HStack {
+                    ForEach(themes) { theme in
+                        Button(theme.name) { viewModel.selectTheme(themeName: theme.name) }
+                    }
+                }
+            } .padding()
         }
-        .padding()
     }
     
     var cards: some View {

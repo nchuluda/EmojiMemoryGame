@@ -30,7 +30,7 @@ var themes: Array<Theme> = [
     Theme(id: 3, name: "Foods", emojis: ["🍓", "🍋", "🍉", "🍏", "🍑", "🍒", "🥑", "🫒", "🥦"], numberPairsCards: 8, cardColor: Color.green),
     Theme(id: 4, name: "Hearts", emojis: ["🩷", "❤️", "🧡", "💛", "💚", "🩵", "💙", "💜"], numberPairsCards: 8, cardColor: Color.yellow),
     Theme(id: 5, name: "Hands", emojis: ["🤞", "👍", "🫰", "✋", "🖖", "👊", "👆", "🤟", "🤙"], numberPairsCards: 6, cardColor: Color.orange),
-    Theme(id: 6, name: "Sports", emojis: ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🥏", "🎱", "🏉"], numberPairsCards: 6, cardColor: Color.red)
+    Theme(id: 6, name: "Sports", emojis: ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🥏", "🎱", "🏉"], numberPairsCards: 2, cardColor: Color.red)
 //    Theme(id: 7, name: "Broken", emojis: ["🤸‍♀️", "🏂"], numberPairsCards: 1, cardColor: Color.black)
 ]
 
